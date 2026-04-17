@@ -116,7 +116,8 @@ export default function App() {
         setError('The mirror could not focus on that location.');
       }
     } catch (err) {
-      setError('A temporal anomaly occurred. Please try again.');
+      const errorMessage = err instanceof Error ? err.message : 'A temporal anomaly occurred. Please try again.';
+      setError(`Lens Error: ${errorMessage}`);
       console.error(err);
     } finally {
       setLoading(false);
