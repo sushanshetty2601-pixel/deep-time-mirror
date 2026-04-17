@@ -1,0 +1,6 @@
+{
+  "name": "Deep-Time Mirror",
+  "description": "An AI-powered environmental time machine that visualizes your location's ancient past, present health, and a restored future.",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": []
+}
