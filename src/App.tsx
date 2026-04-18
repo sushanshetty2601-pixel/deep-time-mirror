@@ -116,8 +116,12 @@ export default function App() {
         setError('The mirror could not focus on that location.');
       }
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'A temporal anomaly occurred. Please try again.';
-      setError(`Lens Error: ${errorMessage}`);
+      const errorMessage = err instanceof Error ? err.message : '';
+      if (errorMessage.includes('429') || errorMessage.includes('RESOURCE_EXHAUSTED')) {
+        setError('The Mirror is cooling down (Free Quota Limit). Please wait 60 seconds and try again.');
+      } else {
+        setError(`Lens Error: ${errorMessage || 'A temporal anomaly occurred.'}`);
+      }
       console.error(err);
     } finally {
       setLoading(false);
@@ -419,13 +423,34 @@ export default function App() {
             </motion.div>
           ) : null}
         </AnimatePresence>
+
+        {hasSearched && !loading && (
+          <motion.section 
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            className="max-w-6xl mx-auto mt-32 mb-20 px-6 text-center"
+          >
+            <div className="w-px h-24 bg-gradient-to-b from-transparent via-white/20 to-transparent mx-auto mb-12" />
+            <h3 className="text-3xl md:text-5xl font-serif italic mb-8 opacity-90">Reflection: The Mirror's Choice</h3>
+            <p className="max-w-2xl mx-auto text-lg text-white/60 font-light leading-relaxed">
+              The history shown here is not just data—it is a map of our choices. To see the 'Past' is to remember what was lost, 
+              and to see the 'Restored Future' is to recognize what is still possible if we act during this critical decade. 
+              The Earth Day 2026 Challenge is our temporal bridge to that greener horizon.
+            </p>
+          </motion.section>
+        )}
       </main>
 
-      <footer className="relative z-20 p-6 flex flex-col md:flex-row justify-between items-center opacity-30 text-[9px] font-mono tracking-widest border-t border-white/5 bg-black/40">
-        <div>Proprietary Temporal AI Lens v4.8L // 3D Render Engine Active</div>
-        <div className="flex gap-6">
-          <span>{new Date().toLocaleDateString()}</span>
-          <span>PLANETARY PULSE: NOMINAL</span>
+      <footer className="relative z-20 p-8 flex flex-col items-center gap-6 border-t border-white/5 bg-black/40">
+        <div className="flex flex-col md:flex-row justify-between w-full max-w-7xl px-6 opacity-30 text-[9px] font-mono tracking-widest uppercase">
+          <div>Proprietary Temporal AI Lens v4.8L // 3D Render Engine Active</div>
+          <div className="flex gap-6">
+            <span>{new Date().toLocaleDateString()}</span>
+            <span>PLANETARY PULSE: NOMINAL</span>
+          </div>
+        </div>
+        <div className="text-xs md:text-sm font-light tracking-[0.2em] text-emerald-400/80 uppercase">
+          made by sushanshetty2601-pixel for earth day challenge
         </div>
       </footer>
     </div>
