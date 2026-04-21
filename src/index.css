@@ -7,11 +7,14 @@
   --font-serif: "Playfair Display", serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
 
-  --color-earth-950: #0c0a09;
-  --color-earth-900: #1c1917;
-  --color-earth-50: #fafaf9;
-  --color-forest-600: #166534;
+  --color-earth-950: #040705;
+  --color-earth-900: #0a110d;
+  --color-earth-50: #f0fdf4;
+  --color-forest-900: #052e16;
+  --color-forest-500: #22c55e;
   --color-forest-400: #4ade80;
+  --color-teal-500: #14b8a6;
+  --color-teal-400: #2dd4bf;
 }
 
 @layer base {
@@ -22,13 +25,43 @@
 }
 
 .glass-panel {
-  @apply bg-white/5 backdrop-blur-xl border border-white/10;
+  @apply bg-white/[0.03] backdrop-blur-2xl border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.8)];
 }
 
-.text-editorial {
-  @apply font-serif italic tracking-tight;
+.glass-card {
+  @apply bg-gradient-to-br from-white/5 to-transparent backdrop-blur-xl border border-white/10 transition-all duration-500;
 }
 
-.timeline-gradient {
-  background: linear-gradient(to right, #ea580c, #166534, #10b981);
+.text-glow {
+  text-shadow: 0 0 20px rgba(74, 222, 128, 0.5);
+}
+
+.mist {
+  background: radial-gradient(circle at 50% 50%, rgba(20, 184, 166, 0.05) 0%, transparent 70%);
+  filter: blur(80px);
+  animation: drift 20s ease-in-out infinite alternate;
+}
+
+@keyframes drift {
+  from { transform: translate(-10%, -10%); }
+  to { transform: translate(10%, 10%); }
+}
+
+.cursor-default {
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><circle cx='16' cy='16' r='6' fill='%234ade80' opacity='0.8'/><circle cx='16' cy='16' r='10' fill='none' stroke='%234ade80' stroke-width='1' stroke-dasharray='4 2'/><path d='M16 16 L24 24' stroke='%234ade80' stroke-width='1' opacity='0.4'/></svg>") 16 16, auto;
+}
+
+/* Base Glowing Earth Cursor */
+.cursor-earth-base {
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'><g transform='translate(24, 24)'><circle r='8' fill='%231d4ed8'/><path d='M-4,-4 Q0,-6 4,-2 T4,4 Q0,6 -4,2 Z' fill='%2315803d'/><circle r='12' fill='none' stroke='%234ade80' stroke-width='0.5' opacity='0.3'/><path d='M12,0 A12,12 0 1,1 -12,0' fill='none' stroke='%234ade80' stroke-width='1' opacity='0.5' stroke-dasharray='2 2'/><path d='M-10,12 L-14,16 M-12,8 L-16,10' stroke='%234ade80' stroke-width='1' opacity='0.4'/></g></svg>") 24 24, auto;
+}
+
+/* RADIANT CURSOR for Earth Review Hover */
+.cursor-radiant {
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'><defs><radialGradient id='g'><stop offset='0%' stop-color='%234ade80' stop-opacity='0.8'/><stop offset='100%' stop-color='%234ade80' stop-opacity='0'/></radialGradient></defs><circle cx='32' cy='32' r='24' fill='url(%23g)'/><g transform='translate(32, 32)'><circle r='10' fill='%2322c55e'/><path d='M-5,-5 Q0,-8 5,-3 T5,5 Q0,8 -5,3 Z' fill='%23166534'/><circle r='16' fill='none' stroke='%234ade80' stroke-width='1' opacity='0.8'/><path d='M-15,15 L-20,20 M-18,10 L-24,12' stroke='%234ade80' stroke-width='1.5'/></g></svg>") 32 32, auto;
+}
+
+/* MIRROR SPECIFIC CURSOR */
+.cursor-mirror-special {
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'><g transform='translate(24, 24)'><circle r='9' fill='%23064e3b'/><circle r='9' fill='none' stroke='%232dd4bf' stroke-width='1' opacity='0.6'/><circle r='14' fill='none' stroke='%232dd4bf' stroke-width='0.5' opacity='0.4'/><path d='M10,-10 Q22,0 10,10' fill='none' stroke='%234ade80' stroke-width='1' opacity='0.5'/><circle cx='-12' cy='-12' r='1.5' fill='%232dd4bf' opacity='0.6'/></g></svg>") 24 24, auto;
 }

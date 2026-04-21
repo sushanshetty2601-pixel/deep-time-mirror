@@ -29,6 +29,34 @@ export interface EnvironmentalInsight {
   restorationGoal?: string;
 }
 
+export interface PerformanceReview {
+  earthGrade: string;
+  overallAssessment: string;
+  planetaryScore: number;
+  percentile: number;
+  statusTags: {
+    label: string;
+    type: 'warning' | 'success' | 'neutral';
+  }[];
+  metrics: {
+    category: string;
+    score: number;
+    feedback: string;
+    impactLabel: string;
+  }[];
+  radarData: {
+    subject: string;
+    value: number;
+    fullMark: number;
+  }[];
+  pip: {
+    title: string;
+    description: string;
+    earthQuote: string;
+    savingMetric: string;
+  }[];
+}
+
 export async function fetchMirrorData(location: string): Promise<EnvironmentalInsight[]> {
   const prompt = `
     Analyze the environmental and ecological history and future of this location: ${location}.
@@ -114,6 +142,107 @@ export async function fetchMirrorData(location: string): Promise<EnvironmentalIn
     // If it's a quote error, let it throw to the UI
     if (response && (response as any).error) throw new Error(JSON.stringify((response as any).error));
     return [];
+  }
+}
+
+export async function fetchPerformanceReview(habits: string): Promise<PerformanceReview> {
+  const prompt = `
+    You are the Planet Earth conducting a cinematic "Performance Review" for a human.
+    Human Habits: "${habits}".
+    
+    Style: Sarcastic, high-end corporate tone ("Gaia Corp"), profoundly exhausted, and BRUTALLY HONEST.
+    
+    STRICT ECOLOGICAL ACCOUNTABILITY: 
+    - If the human reports harmful habits (e.g., littering, plastic waste, high carbon usage), you MUST give a failing grade (D or F) and a low planetaryScore (under 40).
+    - Do NOT be toxically positive. If they are failing, tell them they are a liability to the biosphere.
+    - If they litter, the assessment should be sharp and critical.
+    
+    Structure your response with:
+    - earthGrade: A+ to F.
+    - overallAssessment: A powerful summary sentence.
+    - planetaryScore: 0 to 100.
+    - percentile: What percentage of humans they are doing better than (0-99).
+    - statusTags: 3 items like "High Energy Waste" (warning) or "Low Transport Emotions" (success).
+    - metrics: 3 items with category, score, feedback, and an impactLabel (e.g., "Recoverable future").
+    - radarData: 5 subjects (Energy, Transport, Waste, Water, Diet) with value (0-100) and fullMark (100).
+    - pip (Performance Improvement Plan): 3 concrete actions with title, description, earthQuote, and a savingMetric (e.g., "Saves ~2.1 kg CO2").
+
+    Format as JSON.
+  `;
+
+  const response = await ai.models.generateContent({
+    model: "gemini-flash-latest",
+    contents: prompt,
+    config: {
+      responseMimeType: "application/json",
+      responseSchema: {
+        type: Type.OBJECT,
+        properties: {
+          earthGrade: { type: Type.STRING },
+          overallAssessment: { type: Type.STRING },
+          planetaryScore: { type: Type.NUMBER },
+          percentile: { type: Type.NUMBER },
+          statusTags: {
+            type: Type.ARRAY,
+            items: {
+              type: Type.OBJECT,
+              properties: {
+                label: { type: Type.STRING },
+                type: { type: Type.STRING, enum: ['warning', 'success', 'neutral'] }
+              },
+              required: ['label', 'type']
+            }
+          },
+          metrics: {
+            type: Type.ARRAY,
+            items: {
+              type: Type.OBJECT,
+              properties: {
+                category: { type: Type.STRING },
+                score: { type: Type.NUMBER },
+                feedback: { type: Type.STRING },
+                impactLabel: { type: Type.STRING }
+              },
+              required: ['category', 'score', 'feedback', 'impactLabel']
+            }
+          },
+          radarData: {
+            type: Type.ARRAY,
+            items: {
+              type: Type.OBJECT,
+              properties: {
+                subject: { type: Type.STRING },
+                value: { type: Type.NUMBER },
+                fullMark: { type: Type.NUMBER }
+              },
+              required: ['subject', 'value', 'fullMark']
+            }
+          },
+          pip: {
+            type: Type.ARRAY,
+            items: {
+              type: Type.OBJECT,
+              properties: {
+                title: { type: Type.STRING },
+                description: { type: Type.STRING },
+                earthQuote: { type: Type.STRING },
+                savingMetric: { type: Type.STRING }
+              },
+              required: ['title', 'description', 'earthQuote', 'savingMetric']
+            }
+          }
+        },
+        required: ['earthGrade', 'overallAssessment', 'planetaryScore', 'percentile', 'statusTags', 'metrics', 'radarData', 'pip']
+      }
+    }
+  });
+
+  try {
+    const text = response.text || "{}";
+    return JSON.parse(text);
+  } catch (e) {
+    console.error("Failed to parse review", e);
+    throw new Error("The Earth was too tired to finish your review.");
   }
 }
 

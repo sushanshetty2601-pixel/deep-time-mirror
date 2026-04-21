@@ -1,6 +1,6 @@
 {
-  "name": "Deep-Time Mirror",
-  "description": "An AI-powered environmental time machine that visualizes your location's ancient past, present health, and a restored future.",
+  "name": "Deep-Time Mirror & Earth Auditor",
+  "description": "An interactive Earth Day experience with two portals: Pierce the veil of time with the Mirror, or face a sarcastic performance review from the Earth herself.",
   "requestFramePermissions": ["geolocation"],
-  "majorCapabilities": []
+  "majorCapabilities": ["AI Storytelling", "Environmental Auditing", "Game-like Actions"]
 }
